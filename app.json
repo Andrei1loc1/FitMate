@@ -23,7 +23,7 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.RECEIVE_BOOT_COMPLETED"
       ],
-      "package": "com.anonymous.FitMate"
+      "package": "com.fitmate.app"
     },
     "androidNavigationBar": {
       "visible": "leanback",
