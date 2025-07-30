@@ -1,0 +1,18 @@
+export const icons = {
+  home: require('@/assets/icons/home.png'),
+  robot: require('@/assets/icons/robot.png'),
+  gym: require('@/assets/icons/gym.png'),
+  chef: require('@/assets/icons/chef.png'),
+  user: require('@/assets/icons/user.png'),
+  flame: require('@/assets/icons/flame.png'),
+  walking: require('@/assets/icons/walking.png'),
+  running: require('@/assets/icons/running.png'),
+  cycling: require('@/assets/icons/cycling.png'),
+  drop: require('@/assets/icons/drop.png'),
+  fire: require('@/assets/icons/fire.png'),
+  moon: require('@/assets/icons/moon.png'),
+  time: require('@/assets/icons/time.png'),
+  rightArrow: require('@/assets/icons/right-arrow.png'),
+  fulger: require('@/assets/icons/fulger.png'),
+  profile_pic: require('@/assets/icons/profile_pic.png'),
+};
