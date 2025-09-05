@@ -9,6 +9,7 @@ interface CalendarMealsProps {
 
 const CalendarMeals: React.FC<CalendarMealsProps> = ({ meals }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [viewedDate, setViewedDate] = useState<Date>(new Date());
   const [showModal, setShowModal] = useState(false);
 
   // Group meals by date (YYYY-MM-DD)
@@ -22,15 +23,15 @@ const CalendarMeals: React.FC<CalendarMealsProps> = ({ meals }) => {
     return grouped;
   }, [meals]);
 
-  // Get current month data
+  // Get viewed month data
   const currentDate = new Date();
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const viewedMonth = viewedDate.getMonth();
+  const viewedYear = viewedDate.getFullYear();
+  const daysInMonth = new Date(viewedYear, viewedMonth + 1, 0).getDate();
   // Adjust firstDayOfMonth so that Monday is 0
   // JS getDay(): 0=Sunday, 1=Monday, ..., 6=Saturday
   // We want: 0=Monday, 6=Sunday
-  const jsFirstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const jsFirstDay = new Date(viewedYear, viewedMonth, 1).getDay();
   const firstDayOfMonth = (jsFirstDay + 6) % 7;
 
   const monthNames = [
@@ -41,9 +42,9 @@ const CalendarMeals: React.FC<CalendarMealsProps> = ({ meals }) => {
   const dayNames = ['L', 'Ma', 'Mi', 'J', 'V', 'S', 'D'];
 
   const handleDatePress = (day: number) => {
-    const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const dateKey = `${viewedYear}-${String(viewedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     if (mealsByDate[dateKey] && mealsByDate[dateKey].length > 0) {
-      setSelectedDate(new Date(currentYear, currentMonth, day));
+      setSelectedDate(new Date(viewedYear, viewedMonth, day));
       setShowModal(true);
     }
     // altfel nu deschide modalul
@@ -62,8 +63,11 @@ const CalendarMeals: React.FC<CalendarMealsProps> = ({ meals }) => {
       );
     }
     for (let day = 1; day <= daysInMonth; day++) {
-      const isToday = day === currentDate.getDate();
-      const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const isToday =
+        day === currentDate.getDate() &&
+        viewedMonth === currentDate.getMonth() &&
+        viewedYear === currentDate.getFullYear();
+      const dateKey = `${viewedYear}-${String(viewedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
       const hasMeals = mealsByDate[dateKey] && mealsByDate[dateKey].length > 0;
       days.push(
         <TouchableOpacity
@@ -104,10 +108,16 @@ const CalendarMeals: React.FC<CalendarMealsProps> = ({ meals }) => {
   return (
     <View className="p-4 mt-10">
       {/* Header */}
-      <View style={solidCard.card} className="mb-6 p-4">
+      <View style={solidCard.card} className="mb-6 p-4 flex-row items-center justify-between">
+        <TouchableOpacity onPress={() => setViewedDate(new Date(viewedYear, viewedMonth - 1, 1))}>
+          <Text className="text-white text-2xl font-bold">{"<"}</Text>
+        </TouchableOpacity>
         <Text className="text-white text-2xl font-bold text-center">
-          {monthNames[currentMonth]} {currentYear}
+          {monthNames[viewedMonth]} {viewedYear}
         </Text>
+        <TouchableOpacity onPress={() => setViewedDate(new Date(viewedYear, viewedMonth + 1, 1))}>
+          <Text className="text-white text-2xl font-bold">{">"}</Text>
+        </TouchableOpacity>
       </View>
       {/* Day names */}
       <View className="flex-row justify-around mb-4">

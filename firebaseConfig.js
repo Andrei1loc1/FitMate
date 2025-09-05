@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -20,9 +20,10 @@ const firebaseConfig = {
 
 // Inițializează Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
-// Exportă auth pentru a-l folosi în alte fișiere
-export const auth = getAuth(app);
+// Auth cu persistență pe dispozitiv (rămâi logat între sesiuni)
+export const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
 // Exportă Firestore pentru a salva datele utilizatorilor
 export const db = getFirestore(app);

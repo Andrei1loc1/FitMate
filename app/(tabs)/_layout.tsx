@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import TabIcon from '../../components/TabIcon';
 import { icons } from '@/constants/icons';
 
@@ -12,9 +13,11 @@ const tabList = [
 ];
 
 const _layout = () => {
+  const insets = useSafeAreaInsets();
   return (
     <Tabs
       screenOptions={{
+        tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: '#1F2937',
@@ -22,8 +25,9 @@ const _layout = () => {
           marginHorizontal: 0,
           paddingHorizontal: 10,
           paddingTop: 15,
+          paddingBottom: 8,
           marginBottom: 0,
-          height: 80,
+          height: 70 + 8,
           position: 'absolute',
           borderWidth: 0,
           borderTopWidth: 0,
@@ -40,9 +44,6 @@ const _layout = () => {
           justifyContent: 'center',
           alignItems: 'center',
         },
-        // Animații simple pentru tranziții între tab-uri
-        // animation: 'slide_from_right',
-        // animationDuration: 300,
       }}
     >
       {tabList.map((tab, idx) => (

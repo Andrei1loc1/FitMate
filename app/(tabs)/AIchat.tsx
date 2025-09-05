@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from 'react-native'
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform } from 'react-native'
 import ChatResponse from '@/components/ChatResponse';
 import { useState } from 'react';
 import { button2Styles, chatCardStyles } from '@/styles/cardStyles';
@@ -35,33 +35,39 @@ const AIchat = () => {
   const [prompt, setPrompt] = useState("");
 
   return (
-    <View className='flex-1 justify-start items-center bg-gray-900'>
-      <GradientHeaderAIChat />
-      <View className="flex-row justify-center w-full mt-10">
-          <AISugesstion />
-      </View>
-      <View className="w-[90%] items-center mt-10">
-        <View style={chatCardStyles.card} className="text-textPrimary rounded-xl w-full h-14 px-4">
-          <TextInput
-            className="text-white w-full px-4"
-            placeholder='Ask a question...'
-            placeholderTextColor='#b1c7c4'
-            value={inputText}
-            onChangeText={(text: string) => setInputText(text)}
-          />
+    <KeyboardAvoidingView 
+      className='flex-1 bg-gray-900'
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <View className='flex-1 justify-start items-center'>
+        <GradientHeaderAIChat />
+        <View className="flex-row justify-center w-full mt-10">
+            <AISugesstion />
         </View>
-        <Pressable
-          style={button2Styles.button}
-          className="w-40 mt-4 p-2"
-          onPress={() => {
-            inputText ? setPrompt(inputText) : alert("Please enter a question!");
-            setInputText("");
-          }}>
-          <Text className="text-white text-center font-bold">Send</Text>
-        </Pressable>
-        {prompt ? <ChatResponse prompt={prompt} /> : null}
+        <View className="w-[90%] items-center mt-10">
+          <View style={chatCardStyles.card} className="text-textPrimary rounded-xl w-full h-14 px-4">
+            <TextInput
+              className="text-white w-full px-4"
+              placeholder='Ask a question...'
+              placeholderTextColor='#b1c7c4'
+              value={inputText}
+              onChangeText={(text: string) => setInputText(text)}
+            />
+          </View>
+          <Pressable
+            style={button2Styles.button}
+            className="w-40 mt-4 p-2"
+            onPress={() => {
+              inputText ? setPrompt(inputText) : alert("Please enter a question!");
+              setInputText("");
+            }}>
+            <Text className="text-white text-center font-bold">Send</Text>
+          </Pressable>
+          {prompt ? <ChatResponse prompt={prompt} /> : null}
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 

@@ -8,25 +8,35 @@
     "scheme": "fitmate",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "androidStatusBar": {
+      "hidden": true,
+      "backgroundColor": "#000000",
+      "barStyle": "light-content"
+    },
     "ios": {
       "supportsTablet": true
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": false,
+          "android": {
+        "adaptiveIcon": {
+          "foregroundImage": "./assets/images/logo.png",
+          "backgroundColor": "#ffffff"
+        },
+      "edgeToEdgeEnabled": true,
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.WAKE_LOCK",
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.RECEIVE_BOOT_COMPLETED"
       ],
-      "package": "com.fitmate.app"
+      "package": "com.fitmate.app",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBwFPAQPMzGJOw4ghQYMaziuPK6S0C9Zck"
+        }
+      }
     },
     "androidNavigationBar": {
-      "visible": "leanback",
+      "visible": false,
       "barStyle": "dark-content",
       "backgroundColor": "#121821"
     },
@@ -37,6 +47,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-navigation-bar",
       [
         "expo-splash-screen",
         {
@@ -60,7 +71,8 @@
           "color": "#ffffff",
           "sounds": ["./assets/sounds/notification.wav"]
         }
-      ]
+      ],
+
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ImageBackground } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { auth } from "@/firebaseConfig"
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -43,20 +43,32 @@ const login = () => {
 
   return (
     <ImageBackground source={images.bgOnboarding} className="flex-1">
-    <View className="flex-1 items-center justify-center">
-      <Text className="text-white font-bold text-3xl">Login</Text>
-      <View style={solidCard.card_transparent} className="w-[90%] items-center mt-10 mb-3 py-8">
-        <TextInput style={inputStyles.input} placeholder="Email" placeholderTextColor='#b1c7c4' value={email} onChangeText={setEmail} className="text-white w-[90%] h-17 py-2 mb-4 pl-3"/>
-        <TextInput style={inputStyles.input} placeholder="Password" placeholderTextColor='#b1c7c4' value={password} onChangeText={setPassword} className="text-white w-[90%] h-17 py-2 pl-3" secureTextEntry/>
-      </View>
-      <TouchableOpacity className="w-[50%] mt-4" style={buttonStyles.button} onPress={handleLogin}>
-        <Text className="text-white font-bold text-base">Login</Text>
-      </TouchableOpacity>
-      <Text className="text-gray-300 font-bold my-3">or</Text>
-      <TouchableOpacity className="w-[50%]" style={buttonStyles.button} onPress={() => { router.push("/(auth)/signUp") }}>
-        <Text className="text-white font-bold text-base">SignUp</Text>
-      </TouchableOpacity>
-    </View>
+        <KeyboardAvoidingView 
+            className="flex-1"
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+            <ScrollView 
+                className="flex-1"
+                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+                showsVerticalScrollIndicator={false}
+            >
+                <View className="flex-1 items-center justify-center">
+                    <Text className="text-white font-bold text-3xl">Login</Text>
+                    <View style={solidCard.card_transparent} className="w-[90%] items-center mt-10 mb-3 py-8">
+                        <TextInput style={inputStyles.input} placeholder="Email" placeholderTextColor='#b1c7c4' value={email} onChangeText={setEmail} className="text-white w-[90%] h-17 py-2 mb-4 pl-3"/>
+                        <TextInput style={inputStyles.input} placeholder="Password" placeholderTextColor='#b1c7c4' value={password} onChangeText={setPassword} className="text-white w-[90%] h-17 py-2 pl-3" secureTextEntry/>
+                    </View>
+                    <TouchableOpacity className="w-[50%] mt-4" style={buttonStyles.button} onPress={handleLogin}>
+                        <Text className="text-white font-bold text-base">Login</Text>
+                    </TouchableOpacity>
+                    <Text className="text-gray-300 font-bold my-3">or</Text>
+                    <TouchableOpacity className="w-[50%]" style={buttonStyles.button} onPress={() => { router.push("/(auth)/signUp") }}>
+                        <Text className="text-white font-bold text-base">SignUp</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     </ImageBackground>
   )
 }

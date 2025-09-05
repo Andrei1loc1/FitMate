@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ImageBackground, ScrollView, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, ImageBackground, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useState } from 'react'
 import { images } from '@/constants/images'
 import { buttonStyles } from "@/styles/cardStyles"
@@ -95,109 +95,123 @@ const AddMeal = () => {
                   onClose={() => setShowCamera(false)}
                 />
             ) : (
-            <ScrollView className="flex-1">
-                <View className="flex-1 items-center justify-center py-10">
-                    <Text className="text-white font-bold text-3xl mb-6">Add New Meal</Text>
-                    <View style={solidCard.card} className="w-[90%] items-center py-8 px-4">
-                        <Text className="text-white font-semibold text-lg mb-4">Meal Information</Text>
-                        <TextInput 
-                            style={inputStyles.input} 
-                            placeholder="Meal Name" 
-                            placeholderTextColor='#b1c7c4' 
-                            value={mealName} 
-                            onChangeText={setMealName} 
-                            className="text-white w-full h-12 py-2 mb-4"
-                        />
-                        <View className="w-full mb-4">
-                            <Text className="text-white font-medium mb-2">Meal Type</Text>
-                            <View className="flex-row flex-wrap justify-center gap-2">
-                                {mealTypes.map((type) => (
-                                    <TouchableOpacity
-                                        key={type.key}
-                                        style={[
-                                            buttonStyles.button,
-                                            mealType === type.key && { backgroundColor: 'rgba(46, 204, 112, 0.4)' }
-                                        ]}
-                                        className="px-4 py-2 mx-1"
-                                        onPress={() => setMealType(type.key)}
-                                    >
-                                        <Text className="text-white font-medium text-sm">{type.label}</Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        </View>
-                        <Text className="text-white font-semibold text-lg mb-4">Nutritional Information</Text>
-                        <View className="w-full space-y-4">
-                            <View>
-                                <Text className="text-white font-medium mb-2">Calories</Text>
+                <KeyboardAvoidingView 
+                    className="flex-1"
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+                >
+                    <ScrollView 
+                        className="flex-1"
+                        contentContainerStyle={{ 
+                            paddingBottom: 120,
+                            flexGrow: 1
+                        }}
+                        showsVerticalScrollIndicator={false}
+                        keyboardShouldPersistTaps="handled"
+                    >
+                        <View className="flex-1 items-center justify-center py-10">
+                            <Text className="text-white font-bold text-3xl mb-6">Add New Meal</Text>
+                            <View style={solidCard.card} className="w-[90%] items-center py-8 px-4">
+                                <Text className="text-white font-semibold text-lg mb-4">Meal Information</Text>
                                 <TextInput 
                                     style={inputStyles.input} 
-                                    placeholder="Calories" 
+                                    placeholder="Meal Name" 
                                     placeholderTextColor='#b1c7c4' 
-                                    value={calories} 
-                                    onChangeText={setCalories} 
-                                    className="text-white w-full h-12 py-2"
-                                    keyboardType="numeric"
+                                    value={mealName} 
+                                    onChangeText={setMealName} 
+                                    className="text-white w-full h-12 py-2 mb-4"
                                 />
-                            </View>
-                            <View className="flex-row space-x-2">
-                                <View className="flex-1">
-                                    <Text className="text-white font-medium mb-2">Protein (g)</Text>
-                                    <TextInput 
-                                        style={inputStyles.input} 
-                                        placeholder="Protein" 
-                                        placeholderTextColor='#b1c7c4' 
-                                        value={protein} 
-                                        onChangeText={setProtein} 
-                                        className="text-white w-full h-12 py-2"
-                                        keyboardType="numeric"
-                                    />
+                                <View className="w-full mb-4">
+                                    <Text className="text-white font-medium mb-2">Meal Type</Text>
+                                    <View className="flex-row flex-wrap justify-center gap-2">
+                                        {mealTypes.map((type) => (
+                                            <TouchableOpacity
+                                                key={type.key}
+                                                style={[
+                                                    buttonStyles.button,
+                                                    mealType === type.key && { backgroundColor: 'rgba(46, 204, 112, 0.4)' }
+                                                ]}
+                                                className="px-4 py-2 mx-1"
+                                                onPress={() => setMealType(type.key)}
+                                            >
+                                                <Text className="text-white font-medium text-sm">{type.label}</Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
                                 </View>
-                                <View className="flex-1">
-                                    <Text className="text-white font-medium mb-2">Carbs (g)</Text>
-                                    <TextInput 
-                                        style={inputStyles.input} 
-                                        placeholder="Carbs" 
-                                        placeholderTextColor='#b1c7c4' 
-                                        value={carbs} 
-                                        onChangeText={setCarbs} 
-                                        className="text-white w-full h-12 py-2"
-                                        keyboardType="numeric"
-                                    />
+                                <Text className="text-white font-semibold text-lg mb-4">Nutritional Information</Text>
+                                <View className="w-full space-y-4">
+                                    <View>
+                                        <Text className="text-white font-medium mb-2">Calories</Text>
+                                        <TextInput 
+                                            style={inputStyles.input} 
+                                            placeholder="Calories" 
+                                            placeholderTextColor='#b1c7c4' 
+                                            value={calories} 
+                                            onChangeText={setCalories} 
+                                            className="text-white w-full h-12 py-2"
+                                            keyboardType="numeric"
+                                        />
+                                    </View>
+                                    <View className="flex-row space-x-2">
+                                        <View className="flex-1">
+                                            <Text className="text-white font-medium mb-2">Protein (g)</Text>
+                                            <TextInput 
+                                                style={inputStyles.input} 
+                                                placeholder="Protein" 
+                                                placeholderTextColor='#b1c7c4' 
+                                                value={protein} 
+                                                onChangeText={setProtein} 
+                                                className="text-white w-full h-12 py-2"
+                                                keyboardType="numeric"
+                                            />
+                                        </View>
+                                        <View className="flex-1">
+                                            <Text className="text-white font-medium mb-2">Carbs (g)</Text>
+                                            <TextInput 
+                                                style={inputStyles.input} 
+                                                placeholder="Carbs" 
+                                                placeholderTextColor='#b1c7c4' 
+                                                value={carbs} 
+                                                onChangeText={setCarbs} 
+                                                className="text-white w-full h-12 py-2"
+                                                keyboardType="numeric"
+                                            />
+                                        </View>
+                                    </View>
+                                    <View>
+                                        <Text className="text-white font-medium mb-2">Fat (g)</Text>
+                                        <TextInput 
+                                            style={inputStyles.input} 
+                                            placeholder="Fat" 
+                                            placeholderTextColor='#b1c7c4' 
+                                            value={fat} 
+                                            onChangeText={setFat} 
+                                            className="text-white w-full h-12 py-2"
+                                            keyboardType="numeric"
+                                        />
+                                    </View>
                                 </View>
                             </View>
-                            <View>
-                                <Text className="text-white font-medium mb-2">Fat (g)</Text>
-                                <TextInput 
-                                    style={inputStyles.input} 
-                                    placeholder="Fat" 
-                                    placeholderTextColor='#b1c7c4' 
-                                    value={fat} 
-                                    onChangeText={setFat} 
-                                    className="text-white w-full h-12 py-2"
-                                    keyboardType="numeric"
-                                />
+                            <View className="w-full items-center mt-6 space-y-3">
+                                <TouchableOpacity 
+                                    className="w-[60%] h-12 mb-4" 
+                                    style={buttonStyles.button} 
+                                    onPress={handleAddMeal}
+                                >
+                                    <Text className="text-white font-bold text-base">Add Meal</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                    className="w-[60%] h-12" 
+                                    style={buttonStyles.button} 
+                                    onPress={() => router.back()}
+                                >
+                                    <Text className="text-white font-bold text-base">Cancel</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
-                    </View>
-                    <View className="w-full items-center mt-6 space-y-3">
-                        <TouchableOpacity 
-                            className="w-[60%] h-12 mb-4" 
-                            style={buttonStyles.button} 
-                            onPress={handleAddMeal}
-                        >
-                            <Text className="text-white font-bold text-base">Add Meal</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            className="w-[60%] h-12" 
-                            style={buttonStyles.button} 
-                            onPress={() => router.back()}
-                        >
-                            <Text className="text-white font-bold text-base">Cancel</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </ScrollView>
+                    </ScrollView>
+                </KeyboardAvoidingView>
             )}
         </View>
     )

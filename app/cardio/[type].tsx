@@ -6,34 +6,11 @@ import type { LocationObjectCoords } from 'expo-location';
 import { cardStyles, SettingsStyles, solidCard } from '@/styles/cardStyles';
 import { buttonStyles, button2Styles } from '@/styles/cardStyles';
 import { COLORS } from '@/constants/colors';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker, Polyline, PROVIDER_DEFAULT } from 'react-native-maps';
 import * as Location from 'expo-location';
 import DashCard from '@/components/DashCard';
 
-// Dark map style (Google Maps style array)
-const darkMapStyle = [
-  { elementType: 'geometry', stylers: [{ color: '#212121' }] },
-  { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#212121' }] },
-  { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: '#757575' }] },
-  { featureType: 'administrative.country', elementType: 'labels.text.fill', stylers: [{ color: '#9e9e9e' }] },
-  { featureType: 'administrative.land_parcel', stylers: [{ visibility: 'off' }] },
-  { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#bdbdbd' }] },
-  { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
-  { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#181818' }] },
-  { featureType: 'poi.park', elementType: 'labels.text.fill', stylers: [{ color: '#616161' }] },
-  { featureType: 'poi.park', elementType: 'labels.text.stroke', stylers: [{ color: '#1b1b1b' }] },
-  { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#2c2c2c' }] },
-  { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#8a8a8a' }] },
-  { featureType: 'road.arterial', elementType: 'geometry', stylers: [{ color: '#373737' }] },
-  { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3c3c3c' }] },
-  { featureType: 'road.highway.controlled_access', elementType: 'geometry', stylers: [{ color: '#4e4e4e' }] },
-  { featureType: 'road.local', elementType: 'labels.text.fill', stylers: [{ color: '#616161' }] },
-  { featureType: 'transit', elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
-  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#000000' }] },
-  { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#3d3d3d' }] }
-];
+
 
 const cardioData = {
   walking: {
@@ -197,17 +174,17 @@ export default function CardioDetail() {
         {/* Map Section */}
         <View className="w-full h-[300px] rounded-2xl overflow-hidden mt-2 mb-4 bg-card">
           {location ? (
-            <MapView
-              style={{ flex: 1 }}
-              region={{
-                latitude: location.latitude,
-                longitude: location.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              }}
-              showsUserLocation
-              customMapStyle={darkMapStyle}
-            >
+              <MapView
+               provider={PROVIDER_DEFAULT}
+               style={{ flex: 1 }}
+               region={{
+                 latitude: location.latitude,
+                 longitude: location.longitude,
+                 latitudeDelta: 0.01,
+                 longitudeDelta: 0.01,
+               }}
+                showsUserLocation
+             >
               <Marker coordinate={{ latitude: location.latitude, longitude: location.longitude }} />
               {path.length > 1 && (
                 <Polyline

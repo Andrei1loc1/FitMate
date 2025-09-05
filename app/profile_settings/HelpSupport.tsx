@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { solidCard, inputStyles, buttonStyles } from '@/styles/cardStyles';
@@ -48,8 +48,16 @@ const HelpSupport = () => {
   };
 
   return (
-    <View className="flex-1 bg-[#101827]">
-      <ScrollView className="flex-1">
+    <KeyboardAvoidingView 
+        className="flex-1 bg-[#101827]"
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <ScrollView 
+          className="flex-1"
+          contentContainerStyle={{ paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
+      >
         <GradientHeaderHelp />
         <View className="flex-1 items-center justify-center py-6">
           <View style={solidCard.card} className="w-[90%] py-8 px-4">
@@ -94,7 +102,7 @@ const HelpSupport = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
