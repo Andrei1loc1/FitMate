@@ -42,7 +42,7 @@ const login = () => {
     }
 
   return (
-    <ImageBackground source={images.bgOnboarding} className="flex-1">
+    <ImageBackground source={{ uri: 'https://drive.google.com/uc?export=view&id=1SfbHdlI4ETKMbSBXKIxp67W_fbmA9rxJ' }} className="flex-1">
         <KeyboardAvoidingView 
             className="flex-1"
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

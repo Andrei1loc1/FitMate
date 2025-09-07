@@ -3,13 +3,12 @@ import React from 'react'
 import { useRouter } from 'expo-router'
 import { images } from '@/constants/images'
 import { button2Styles } from '@/styles/cardStyles'
-import TextMaskLogo from '@/components/TextMaskLogo'
 
 const onboarding = () => {
   const router = useRouter();
 
   return (
-    <ImageBackground source={images.bgOnboarding} className="flex-1">
+    <ImageBackground source={{ uri: 'https://drive.google.com/uc?export=view&id=1SfbHdlI4ETKMbSBXKIxp67W_fbmA9rxJ' }} className="flex-1">
       <View className="flex-1 items-center justify-center">
         <Text className="text-3xl font-bold text-white">Welcome to <Text className='text-[#58a6ff]'>FitMate</Text></Text>
         <View className="w-full items-center mt-10">

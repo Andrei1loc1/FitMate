@@ -3,77 +3,12 @@
     "name": "FitMate",
     "slug": "FitMate",
     "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
-    "scheme": "fitmate",
-    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "androidStatusBar": {
-      "hidden": true,
-      "backgroundColor": "#000000",
-      "barStyle": "light-content"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-          "android": {
-        "adaptiveIcon": {
-          "foregroundImage": "./assets/images/logo.png",
-          "backgroundColor": "#ffffff"
-        },
-      "edgeToEdgeEnabled": true,
-      "permissions": [
-        "android.permission.RECORD_AUDIO",
-        "android.permission.WAKE_LOCK",
-        "android.permission.FOREGROUND_SERVICE",
-        "android.permission.RECEIVE_BOOT_COMPLETED"
-      ],
-      "package": "com.fitmate.app",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyBwFPAQPMzGJOw4ghQYMaziuPK6S0C9Zck"
-        }
-      }
-    },
-    "androidNavigationBar": {
-      "visible": false,
-      "barStyle": "dark-content",
-      "backgroundColor": "#121821"
-    },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/logo.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-navigation-bar",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/logo.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "Aplicația necesită acces la galeria foto pentru a selecta imagini de mâncare.",
-          "cameraPermission": "Aplicația necesită acces la camera pentru a face poze cu mâncarea."
-        }
-      ],
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/images/logo.png",
-          "color": "#ffffff",
-          "sounds": ["./assets/sounds/notification.wav"]
-        }
-      ],
-
-    ],
     "experiments": {
       "typedRoutes": true
     },
@@ -81,6 +16,17 @@
       "router": {},
       "eas": {
         "projectId": "eb758f01-a043-4aee-b558-3e27ce4a3fbc"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/eb758f01-a043-4aee-b558-3e27ce4a3fbc"
+    },
+    "android": {
+      "runtimeVersion": "1.0.0"
+    },
+    "ios": {
+      "runtimeVersion": {
+        "policy": "appVersion"
       }
     }
   }
