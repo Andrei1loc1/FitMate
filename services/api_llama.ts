@@ -1,15 +1,20 @@
+// Allow TypeScript to recognize process.env in Expo bundler context
+declare const process: any;
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const API_KEY = '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'; // For testing only!
+// Read the OpenRouter API key from Expo public env at build time
+const API_KEY = process.env.EXPO_PUBLIC_QWEN_API_KEY;
 
 export async function getMotivationalQuoteLlama() {
   const apiKey = API_KEY;
-  if (!apiKey) throw new Error('Qwen API key missing!');
+  if (!apiKey) throw new Error('OpenRouter API key missing (EXPO_PUBLIC_QWEN_API_KEY)');
 
   const response = await fetch(API_URL, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
+      'X-Title': 'FitMate AI',
+      'HTTP-Referer': 'https://fitmate.ai'
     },
     body: JSON.stringify({
       model: 'qwen/qwen-2.5-72b-instruct:free',
@@ -24,12 +29,21 @@ export async function getMotivationalQuoteLlama() {
   });
 
   if (!response.ok) {
-    const error = await response.text();
+    const errorText = await response.text();
+    const status = response.status;
     // fallback static dacă e rate limit
-    if (response.status === 429 || error.includes('Rate limit exceeded')) {
+    if (status === 429 || errorText.includes('Rate limit exceeded')) {
       return 'Stay strong! Every step counts.';
     }
-    throw new Error('Qwen API error: ' + error);
+    let message = errorText;
+    try {
+      const errJson = JSON.parse(errorText);
+      message = errJson?.error?.message || message;
+    } catch {}
+    if (status === 401 || /user not found/i.test(message)) {
+      throw new Error('OpenRouter authentication failed (401). Check EXPO_PUBLIC_QWEN_API_KEY and rebuild the app. Details: ' + message);
+    }
+    throw new Error('OpenRouter API error: ' + message);
   }
 
   const data = await response.json();
@@ -42,7 +56,7 @@ export async function getMotivationalQuoteLlama() {
 
 export async function getMealPlanLlama(mealTypes: string[]) {
   const apiKey = API_KEY;
-  if (!apiKey) throw new Error('API key missing!');
+  if (!apiKey) throw new Error('OpenRouter API key missing (EXPO_PUBLIC_QWEN_API_KEY)');
 
   // Use English meal types for MoonshotAI
   // If mealTypes are not in English, map them here
@@ -56,6 +70,8 @@ export async function getMealPlanLlama(mealTypes: string[]) {
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
+      'X-Title': 'FitMate AI',
+      'HTTP-Referer': 'https://fitmate.ai'
     },
     body: JSON.stringify({
       model: 'moonshotai/kimi-k2:free',
@@ -70,14 +86,23 @@ export async function getMealPlanLlama(mealTypes: string[]) {
   });
 
   if (!response.ok) {
-    const error = await response.text();
+    const errorText = await response.text();
+    const status = response.status;
     // fallback static dacă e rate limit
-    if (response.status === 429 || error.includes('Rate limit exceeded')) {
+    if (status === 429 || errorText.includes('Rate limit exceeded')) {
       // fallback plan static
       const staticPlan = Object.fromEntries(mealTypes.map((type, idx) => [type, `Example meal for ${type.toLowerCase()}`]));
       return staticPlan;
     }
-    throw new Error('MoonshotAI API error: ' + error);
+    let message = errorText;
+    try {
+      const errJson = JSON.parse(errorText);
+      message = errJson?.error?.message || message;
+    } catch {}
+    if (status === 401 || /user not found/i.test(message)) {
+      throw new Error('OpenRouter authentication failed (401). Check EXPO_PUBLIC_QWEN_API_KEY and rebuild the app. Details: ' + message);
+    }
+    throw new Error('OpenRouter API error: ' + message);
   }
 
   const data = await response.json();

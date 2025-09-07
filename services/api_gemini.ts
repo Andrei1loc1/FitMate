@@ -1,3 +1,5 @@
+// Allow TypeScript to recognize process.env in Expo bundler context
+declare const process: any;
 const API_KEY = process.env.EXPO_PUBLIC_AI_API_KEY;
 // API Key loaded
 
@@ -14,7 +16,7 @@ const GEMINI_MODELS = [
   'gemini-1.5-flash-8b-latest',
   'gemini-1.5-pro-8b-latest',
 ];
-const HEADERS = { 'Content-Type': 'application/json' };
+const HEADERS = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
 
 // Specialized fitness prompt to be included with every request
 const FITNESS_PROMPT = `Ești un asistent virtual specializat în fitness, nutriție și sănătate legată de sport. Oferi utilizatorilor sfaturi scurte, clare și ușor de aplicat. Răspunsurile tale trebuie să aibă între 2 și 6 propoziții, iar doar dacă întrebarea este complexă (ex: plan de alimentație, explicații despre hormoni, tipuri de antrenament etc.), poți extinde răspunsul. 

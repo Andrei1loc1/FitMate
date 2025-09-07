@@ -67,20 +67,57 @@ const Camera = ({ onResult, onClose }: CameraProps) => {
           reader.onloadend = () => resolve(reader.result as string);
           reader.readAsDataURL(blob);
         });
-        const prompt = `Analizează această imagine de mâncare și identifică:\n1. Ce mâncare este în imagine\n2. Caloriile aproximative (kcal)\n3. Nutrienții principali (proteine, carbohidrați, grăsimi în grame)\n\nRăspunde în format JSON:\n{\n  "food": "numele mâncării",\n  "calories": numărul_de_calorii,\n  "nutrients": {\n    "protein": proteine_grame,\n    "carbs": carbohidrați_grame,\n    "fat": grăsimi_grame\n  }\n}`;
+        const prompt = `Analizează această imagine de mâncare și identifică:\n1. Ce mâncare este în imagine\n2. Caloriile aproximative (kcal)\n3. Nutrienții principali (proteine, carbohidrați, grăsimi în grame)\n\nRăspunde EXCLUSIV cu un obiect JSON valid. Nu adăuga explicații, text suplimentar sau backticks. Formatul exact:\n{\n  "food": "numele mâncării",\n  "calories": numărul_de_calorii,\n  "nutrients": {\n    "protein": proteine_grame,\n    "carbs": carbohidrați_grame,\n    "fat": grăsimi_grame\n  }\n}`;
         const result = await getGeminiResponseWithFallback(base64, prompt);
-        let cleanResult = result.trim();
-        const jsonStart = cleanResult.indexOf('{');
-        const jsonEnd = cleanResult.lastIndexOf('}') + 1;
-        if (jsonStart !== -1 && jsonEnd > jsonStart) {
-          cleanResult = cleanResult.substring(jsonStart, jsonEnd);
-        }
-        const parsedResult = JSON.parse(cleanResult);
-        if (parsedResult.food && typeof parsedResult.calories === 'number') {
-          setCalorieResult(parsedResult);
-          if (onResult) onResult(parsedResult);
+
+        const extractJson = (text: string): any | null => {
+          try {
+            let t = (text || '').trim();
+            // remove code fences ```json ... ```
+            const fenceMatch = t.match(/```(?:json)?\s*([\s\S]*?)```/i);
+            if (fenceMatch) t = fenceMatch[1].trim();
+            // strip UTF-8 BOM if present
+            t = t.replace(/^\uFEFF/, '');
+            // narrow to first { ... last }
+            const start = t.indexOf('{');
+            const end = t.lastIndexOf('}');
+            if (start !== -1 && end > start) {
+              t = t.substring(start, end + 1);
+            } else {
+              return null;
+            }
+            return JSON.parse(t);
+          } catch {
+            return null;
+          }
+        };
+
+        const parsed = extractJson(result);
+        if (parsed && parsed.food) {
+          const toNum = (v: any): number => {
+            if (typeof v === 'number' && Number.isFinite(v)) return Math.round(v);
+            if (typeof v === 'string') {
+              const m = v.match(/[+-]?\d+(?:[\.,]\d+)?/);
+              if (m) {
+                const n = parseFloat(m[0].replace(',', '.'));
+                if (Number.isFinite(n)) return Math.round(n);
+              }
+            }
+            return NaN;
+          };
+          const safeResult: CalorieResult = {
+            food: String(parsed.food || '').trim(),
+            calories: Number.isFinite(toNum(parsed.calories)) ? toNum(parsed.calories) : 0,
+            nutrients: {
+              protein: Number.isFinite(toNum(parsed.nutrients?.protein)) ? toNum(parsed.nutrients?.protein) : undefined,
+              carbs: Number.isFinite(toNum(parsed.nutrients?.carbs)) ? toNum(parsed.nutrients?.carbs) : undefined,
+              fat: Number.isFinite(toNum(parsed.nutrients?.fat)) ? toNum(parsed.nutrients?.fat) : undefined,
+            }
+          };
+          setCalorieResult(safeResult);
+          if (onResult) onResult(safeResult);
         } else {
-          throw new Error('Invalid result structure');
+          throw new Error('Răspuns AI invalid: nu s-a putut extrage JSON valid.');
         }
       } catch (error) {
         let msg = '';
